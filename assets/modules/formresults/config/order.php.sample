@@ -1,0 +1,21 @@
+<?php
+
+return [
+    'caption' => 'Заказы',
+
+    'fields' => [
+        'name' => [
+            'caption' => 'ФИО',
+        ],
+        'phone' => [
+            'caption' => 'Телефон',
+        ],
+        'page' => [
+            'caption' => 'Страница',
+            'prepare' => function($value, $data, $evo) {
+                $value = str_replace('&nbsp;', ' ', $value);
+                return $value;
+            },
+        ],
+    ],
+];
