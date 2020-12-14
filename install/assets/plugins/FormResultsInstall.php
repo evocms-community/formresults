@@ -18,10 +18,10 @@ $modx->db->query("
       `fields` mediumtext NOT NULL,
       `files` text NOT NULL,
       `status_id` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
-      `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-      `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+      `created_at` timestamp NULL DEFAULT NULL,
+      `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
       PRIMARY KEY (`id`)
-    ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+    ) DEFAULT CHARSET=utf8mb4;
 ");
 
 // remove installer

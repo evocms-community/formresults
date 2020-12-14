@@ -4,8 +4,6 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\{Style, Border, Fill, Alignment};
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
 class FormResults
 {
     const VERSION = '0.1.0';
@@ -50,6 +48,11 @@ class FormResults
                 switch ($_GET['action']) {
                     case 'export': {
                         echo $this->export($form);
+                        break;
+                    }
+
+                    case 'data': {
+                        echo json_encode($this->getData($form, $_GET), JSON_UNESCAPED_UNICODE);
                         break;
                     }
                 }
@@ -181,7 +184,7 @@ class FormResults
 
     private function renderAllFormResults($form)
     {
-        $query = $this->evo->db->select('*', $this->table, "`form_id` = '{$form['alias']}'", "created_at DESC, id DESC");
+        $results = $this->getData($form);
 
         $columns = [
             [
@@ -233,7 +236,7 @@ class FormResults
         return $this->render('form_results', [
             'form'    => $form,
             'columns' => $columns,
-            'results' => $this->prepareResults($form, $this->evo->db->makeArray($query)),
+            'results' => $results,
         ]);
     }
 
@@ -371,6 +374,12 @@ class FormResults
         return true;
     }
 
+    public function getData($form, $request = [])
+    {
+        $query = $this->evo->db->select('*', $this->table, "`form_id` = '{$form['alias']}'", "created_at DESC, id DESC");
+        return $this->prepareResults($form, $this->evo->db->makeArray($query));
+    }
+
     public function loadLang()
     {
         if ($this->lang === null) {
@@ -401,6 +410,7 @@ class FormResults
             $_COOKIE['MODX_themeMode'] = '';
         }
 
+        $modx = $this->evo;
         $managerPath = $this->evo->getManagerPath();
         $version = self::VERSION;
         $_lang  = $this->loadLang();
