@@ -9,6 +9,7 @@
  */
 //<?php
 
+$modx->clearCache('full');
 $table = $modx->getFullTablename('form_results');
 
 $modx->db->query("
