@@ -55,6 +55,22 @@ class FormResults
                         echo json_encode($this->getData($form, $_GET), JSON_UNESCAPED_UNICODE);
                         break;
                     }
+
+                    case 'delete': {
+                        if (!empty($_REQUEST['result_id']) && is_numeric($_REQUEST['result_id'])) {
+                            echo json_encode([
+                                'status' => $this->deleteResult($_REQUEST['result_id']),
+                            ], JSON_UNESCAPED_UNICODE);
+                        }
+                        break;
+                    }
+
+                    case 'deleteall': {
+                        echo json_encode([
+                            'status' => $this->deleteResults($_GET['type']),
+                        ], JSON_UNESCAPED_UNICODE);
+                        break;
+                    }
                 }
 
                 return;
@@ -233,6 +249,15 @@ class FormResults
             $columns[] = $column;
         }
 
+        $columns[] = [
+            'id'     => 'id',
+            'header' => [
+                '<center><span class="webix_icon fa-trash-o"></span></center>',
+            ],
+            'width' => 50,
+            'template'  => '<center><a href="#" class="btn btn-sm btn-danger fa fa-trash" onclick="removeResult(event, #id#)"></a></center>',
+        ];
+
         return $this->render('form_results', [
             'form'    => $form,
             'columns' => $columns,
@@ -333,6 +358,16 @@ class FormResults
         header('Cache-Control: max-age=0');
 
         $writer->save('php://output');
+    }
+
+    public function deleteResult($id)
+    {
+        return $this->evo->db->delete($this->table, "`id` = '" . intval($id) . "'");
+    }
+
+    public function deleteResults($form_id)
+    {
+        return $this->evo->db->delete($this->table, "`form_id` = '" . $this->evo->db->escape($form_id) . "'");
     }
 
     public function catchFormResult($data, $FL)

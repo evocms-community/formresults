@@ -6,9 +6,15 @@
     <div id="actions">
         <div class="btn-group">
             <?php if (!empty($columns)): ?>
-                <?php if ($canExport && !empty($results)): ?>
-                    <a id="Button4" class="btn btn-primary" href="<?= $moduleUrl ?>&type=<?= $form['alias'] ?>&action=export" target="_blank">
-                        <i class="fa fa-download"></i><span><?= $_lang['formresults.xls_export'] ?></span>
+                <?php if (!empty($results)): ?>
+                    <?php if ($canExport): ?>
+                        <a id="Button4" class="btn btn-primary" href="<?= $moduleUrl ?>&type=<?= $form['alias'] ?>&action=export" target="_blank">
+                            <i class="fa fa-download"></i><span><?= $_lang['formresults.xls_export'] ?></span>
+                        </a>
+                    <?php endif; ?>
+
+                    <a class="btn btn-danger" href="#" onclick="return removeResults(event);">
+                        <i class="fa fa-trash"></i><span><?= $_lang['formresults.delete_all'] ?></span>
                     </a>
                 <?php endif; ?>
 

@@ -12,4 +12,8 @@ return [
     'formresults.xls_export' => 'Экспорт в XLS',
     'formresults.field_name' => 'Название поля',
     'formresults.value' => 'Значение',
+    'formresults.delete' => 'Удалить',
+    'formresults.delete_all' => 'Удалить все',
+    'formresults.confirm_delete' => 'Вы уверены, что хотите удалить этот результат?',
+    'formresults.confirm_delete_all' => 'Вы уверены, что хотите удалить все результаты?',
 ];

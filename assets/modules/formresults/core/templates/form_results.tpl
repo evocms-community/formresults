@@ -31,6 +31,39 @@
 </div>
 
 <script>
+    var removeResult = function(e, id) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+
+        if (!confirm('<?= $_lang['formresults.confirm_delete'] ?>')) {
+            return;
+        }
+
+        fetch('<?= $moduleUrl ?>&type=<?= $form['alias'] ?>&action=delete', {
+            method: 'POST',
+            body: new URLSearchParams({
+                result_id: id
+            })
+        }).then(function(response) {
+            window.location.reload();
+        });
+    };
+
+    var removeResults = function(e) {
+        e.preventDefault();
+
+        if (!confirm('<?= $_lang['formresults.confirm_delete_all'] ?>')) {
+            return;
+        }
+
+        fetch('<?= $moduleUrl ?>&type=<?= $form['alias'] ?>&action=deleteall', {
+            method: 'POST'
+        }).then(function(response) {
+            window.location.reload();
+        });
+    };
+
     webix.ready(function(){
         webix.ui({
             responsive: true,
