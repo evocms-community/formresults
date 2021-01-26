@@ -6,7 +6,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class FormResults
 {
-    const VERSION = '0.1.0';
+    const VERSION = '0.1.1';
 
     private $corePath;
     private $params = [];
@@ -384,11 +384,39 @@ class FormResults
     {
         if ($this->lang === null) {
             $userlang = $this->evo->getConfig('manager_language');
-            $_lang    = [];
+            $_lang = [];
 
-            include MODX_MANAGER_PATH . 'includes/lang/' . $userlang . '.inc.php';
+            $aliases = [
+                'bg' => 'bulgarian',
+                'zh' => 'chinese',
+                'cs' => 'czech',
+                'da' => 'danish',
+                'en' => 'english',
+                'fi' => 'finnish',
+                'fr' => 'francais-utf8',
+                'de' => 'german',
+                'he' => 'hebrew',
+                'it' => 'italian',
+                'jp' => 'japanese-utf8',
+                'nl' => 'nederlands-utf8',
+                'no' => 'norsk',
+                'fa' => 'persian',
+                'pl' => 'polish-utf8',
+                'pt' => 'portuguese-br-utf8',
+                'ru' => 'russian-UTF8',
+                'es' => 'spanish-utf8',
+                'sv' => 'svenska-utf8',
+                'uk' => 'ukrainian'
+            ];
 
-            foreach ([$this->evo->getConfig('manager_language'), 'english'] as $l) {
+            if (isset($aliases[$userlang])) {
+                include EVO_CORE_PATH . 'lang/' . $userlang . '/global.php';
+                $userlang = $aliases[$userlang];
+            } else {
+                include MODX_MANAGER_PATH . 'includes/lang/' . $userlang . '.inc.php';
+            }
+
+            foreach ([$userlang, 'english'] as $l) {
                 if (is_readable($this->corePath . 'lang/' . $l . '/formresults.inc.php')) {
                     $lang = include $this->corePath . 'lang/' . $l . '/formresults.inc.php';
                     break;
