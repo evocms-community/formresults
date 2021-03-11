@@ -6,7 +6,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class FormResults
 {
-    const VERSION = '0.1.1';
+    const VERSION = '0.2.0';
 
     private $corePath;
     private $params = [];
@@ -152,20 +152,36 @@ class FormResults
                     $options['type'] = 'text';
                 }
 
+                if ($options['type'] == 'file') {
+                    $value = $result['files'][$field] ?: null;
+                } else {
+                    $value = $result['fields'][$field] ?: null;
+                }
+
                 if (isset($options['prepare']) && is_callable($options['prepare'])) {
-                    if ($options['type'] == 'file') {
-                        $value = $result['files'][$field] ?: null;
-                    } else {
-                        $value = $result['fields'][$field] ?: null;
-                    }
-
                     $value = call_user_func($options['prepare'], $value, $result, $this->evo);
+                }
 
-                    if ($options['type'] == 'file') {
-                        $result['file_' . $field] = $value;
-                    } else {
-                        $result['fields'][$field] = $value;
-                    }
+                if (!is_array($value)) {
+                    $value = [$value];
+                }
+
+                if (isset($options['elements']) && is_array($options['elements'])) {
+                    $value = array_map(function($val) use ($options) {
+                        if (isset($options['elements'][$val])) {
+                            return $options['elements'][$val];
+                        }
+
+                        return $val;
+                    }, $value);
+                }
+
+                $value = implode(', ', $value);
+
+                if ($options['type'] == 'file') {
+                    $result['file_' . $field] = $value;
+                } else {
+                    $result['fields'][$field] = $value;
                 }
             }
 
@@ -223,6 +239,10 @@ class FormResults
         ];
 
         foreach ($form['fields'] as $field => $options) {
+            if (!empty($options['onlyfull'])) {
+                continue;
+            }
+
             $column = [
                 'id' => $field,
                 'header' => [

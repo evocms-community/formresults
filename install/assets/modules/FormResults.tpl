@@ -4,7 +4,7 @@
  * Form results
  *
  * @category    module
- * @version     0.1.0
+ * @version     0.2.0
  * @author      mnoskov
  * @internal    @guid formresults
  * @internal    @modx_category Manager and Admin
